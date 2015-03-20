@@ -1,10 +1,18 @@
 require "bundler/gem_tasks"
 require "rake/clean"
-require "rake/testtask"
+require "rspec/core/rake_task"
 
 CLOBBER << "pkg"
+RSpec::Core::RakeTask.new(:spec)
 
-Rake::TestTask.new do |t|
-  t.test_files = FileList["spec/*_spec.rb"]
-  t.libs << "spec"
+task :console do
+  require "bundler/setup"
+  require "pry"
+  Pry.start
 end
+
+task :style do
+  sh "rubocop -a ."
+end
+
+task default: :spec

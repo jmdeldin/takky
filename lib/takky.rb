@@ -1,5 +1,32 @@
+require "takky/config"
+
 module Takky
   VERSION = "0.0.0"
 
-  require "takky/path"
+  def self.config
+    @config
+  end
+
+  def self.config=(config)
+    @config = config
+  end
+
+  def self.configure
+    @config = Takky::Config.new
+    yield(@config)
+  end
+
+  autoload :Compression, "takky/compression"
+  autoload :CompressionWorker, "takky/compression_worker"
+
+  autoload :DeleteWorker, "takky/delete_worker"
+  autoload :MimeType, "takky/mime_type"
+  autoload :Model, "takky/model"
+  autoload :Path, "takky/path"
+  autoload :PostProcessor, "takky/post_processor"
+  autoload :ResizeWorker, "takky/resize_worker"
+  autoload :S3, "takky/s3"
+  autoload :Uploader, "takky/uploader"
+  autoload :UploadWorker, "takky/upload_worker"
+  autoload :Url, "takky/url"
 end
