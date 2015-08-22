@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "mini_magick"
-  spec.add_runtime_dependency "sidekiq", ">= 3"
+  spec.add_runtime_dependency "sidekiq", ">= 3.4"
   spec.add_runtime_dependency "activerecord", ">= 4"
   spec.add_runtime_dependency "mime-types"
   spec.add_development_dependency "bundler", "~> 1.8"
