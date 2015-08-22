@@ -1,0 +1,15 @@
+class CreateTakky<%= model_name.capitalize%> < ActiveRecord::Migration
+  def change
+    create_table "<%= model_name.pluralize %>" do |t|
+      t.string :style, null: false
+      t.string :digest, null: true
+      t.string :extension, limit: 4, null: false
+      t.string :environment, limit: 1, null: false
+      t.datetime :uploaded_at
+      t.datetime :created_at, null: false
+      t.datetime :updated_at, null: false
+    end
+
+    # TODO: indexes
+  end
+end
