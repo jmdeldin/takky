@@ -1,4 +1,4 @@
-class CreateTakky<%= model_name.capitalize%> < ActiveRecord::Migration
+class CreateTakky<%= model_name.capitalize %> < ActiveRecord::Migration
   def change
     create_table "<%= model_name.pluralize %>" do |t|
       t.string :style, null: false
