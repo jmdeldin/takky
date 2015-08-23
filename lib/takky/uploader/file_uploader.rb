@@ -7,10 +7,22 @@ module Takky
         update_extension
       end
 
+      private
+
       def update_extension
-        ext = Takky::MimeType.for(@file.original_filename)
+        ext = Takky::MimeType.for(filename)
         if ext != attachment.extension
           attachment.update_attributes!(extension: ext)
+        end
+      end
+
+      # Handle Tempfiles and regular Files
+      # TODO: Still necessary?
+      def filename
+        if @file.respond_to?(:original_filename)
+          @file.original_filename
+        else
+          File.basename(@file)
         end
       end
     end
