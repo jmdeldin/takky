@@ -14,11 +14,11 @@ module Takky
     end
 
     def to_s
-      r = root and "#{r}/#{filename}"
+      r = root ? "#{root}/#{filename}" : ''
     end
 
     def root
-      filename && "#{prefix}/#{environment}/#{attachment.id}"
+      filename and "#{prefix}/#{environment}/#{attachment.id}"
     end
   end
 end
