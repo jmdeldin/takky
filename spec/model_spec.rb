@@ -1,28 +1,8 @@
 require "spec_helper"
-require "active_record"
-
-ActiveRecord::Base.establish_connection("adapter" => "sqlite3", "database" => ":memory:")
-
-table_name = "takky_model_attachments"
-
-ActiveRecord::Base.connection.tap do |cx|
-  cx.create_table(table_name) do |t|
-    t.string :style, null: false
-    t.string :digest, null: true
-    t.string :extension, limit: 4, null: false
-    t.string :environment, limit: 1, null: false
-    t.datetime :uploaded_at
-    t.datetime :created_at, null: false
-    t.datetime :updated_at, null: false
-  end
-end
-
-class TakkyModelAttachment < ActiveRecord::Base
-  include Takky::Model
-end
 
 describe TakkyModelAttachment do
   include TakkySupport
+  include DatabaseSupport
 
   subject(:attachment) { TakkyModelAttachment.new(style: "source", extension: "jpg") }
   let(:blank) { TakkyModelAttachment.new }
@@ -66,7 +46,7 @@ describe TakkyModelAttachment do
       attachment.save!
 
       # simulate existing production record
-      described_class.connection.execute("UPDATE #{table_name} SET environment = 'p' WHERE id = #{attachment.id}")
+      described_class.connection.execute("UPDATE #{DatabaseSupport::TABLE_NAME} SET environment = 'p' WHERE id = #{attachment.id}")
 
       i = described_class.find(attachment.id)
       expect(i.environment).to eq "p"

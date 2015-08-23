@@ -17,16 +17,6 @@ module TakkySupport
 
   OtherProcessor = Class.new(FakeProcessor)
 
-  def fetch_next_attachment_id
-    db = Rails.configuration.database_configuration.fetch("test").fetch("database")
-    next_id_sql = <<-EOF
-      SELECT `AUTO_INCREMENT`
-      FROM information_schema.tables
-      WHERE table_schema = '#{db}' AND table_name = 'attachments'
-    EOF
-
-    ActiveRecord::Base.connection.select_value(next_id_sql)
-  end
 
   # TODO: This needs to go in Takky's spec_helper file
   def default_takky_config(example)
@@ -51,5 +41,39 @@ module TakkySupport
     status = $?.exitstatus
     fail out if $?.exitstatus == 2
     out.split(" ").first.to_f < 1 && status == 0
+  end
+end
+
+module DatabaseSupport
+  require "active_record"
+  ActiveRecord::Base.establish_connection("adapter" => "sqlite3", "database" => ":memory:")
+
+  TABLE_NAME = "takky_model_attachments"
+
+  ActiveRecord::Base.connection.tap do |cx|
+    cx.create_table(TABLE_NAME) do |t|
+      t.string :style, null: false
+      t.string :digest, null: true
+      t.string :extension, limit: 4, null: false
+      t.string :environment, limit: 1, null: false
+      t.datetime :uploaded_at
+      t.datetime :created_at, null: false
+      t.datetime :updated_at, null: false
+    end
+  end
+
+  class ::TakkyModelAttachment < ActiveRecord::Base
+    include Takky::Model
+  end
+
+  def fetch_next_attachment_id
+    db = Rails.configuration.database_configuration.fetch("test").fetch("database")
+    next_id_sql = <<-EOF
+      SELECT `AUTO_INCREMENT`
+      FROM information_schema.tables
+      WHERE table_schema = '#{db}' AND table_name = '#{TABLE_NAME}'
+    EOF
+
+    ActiveRecord::Base.connection.select_value(next_id_sql)
   end
 end
