@@ -11,7 +11,7 @@ describe Takky::Compression::PngCompression do
 
     it "works" do
       Tempfile.create(%w(foo .png)) do |tf|
-        png = image_fixture("tellafriend-get25.png")
+        png = image_fixture("spike.png")
         fh = File.open(png, "r")
 
         compresser = described_class.new(attachment, 1, tf)
@@ -25,7 +25,7 @@ describe Takky::Compression::PngCompression do
 
     it "throws an exception if pngquant errors" do
       Tempfile.create(%w(foo .png)) do |tf|
-        bad_image = image_fixture("fonzi.jpg")
+        bad_image = image_fixture("fonzie.jpg")
         fh = File.open(bad_image, "r")
 
         compresser = described_class.new(attachment, 1, tf)

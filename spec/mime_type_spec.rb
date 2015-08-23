@@ -5,7 +5,7 @@ describe Takky::MimeType do
 
   describe "#for" do
     specify do
-      expect(described_class.for(image_fixture("fonzi.jpg"))).to eql "jpg"
+      expect(described_class.for(image_fixture("fonzie.jpg"))).to eql "jpg"
     end
 
     specify do
