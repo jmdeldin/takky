@@ -1,7 +1,6 @@
 language: ruby
 rvm:
   - 2.2.1
-addons:
-  apt:
-    packages:
-      - pngquant
+before_install:
+  - curl http://archive.ubuntu.com/ubuntu/pool/universe/p/pngquant/pngquant_2.0.1-1_amd64.deb -O ~/pngquant.deb
+  - dpkg -i --force-not-root --root=$HOME ~/pngquant.deb
