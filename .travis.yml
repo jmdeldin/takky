@@ -1,6 +1,10 @@
 language: ruby
 rvm:
   - 2.2.2
+env:
+  - PATH="$HOME/bin:$PATH"
 before_install:
-  - curl http://archive.ubuntu.com/ubuntu/pool/universe/p/pngquant/pngquant_2.0.1-1_amd64.deb -o ~/pngquant.deb
-  - dpkg -i --force-not-root --root=$HOME ~/pngquant.deb
+  - curl -L https://github.com/pornel/pngquant/tarball/master -o /tmp/pngquant.tgz
+  - mkdir -p ~/bin /tmp/pngquant
+  - tar xvzf /tmp/pngquant.tgz -C /tmp/pngquant --strip-components=1
+  - cd /tmp/pngquant && make && mv pngquant ~/bin/
