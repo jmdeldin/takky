@@ -2,8 +2,6 @@ require "takky/config"
 require "sidekiq"
 
 module Takky
-  VERSION = "0.0.0"
-
   def self.config
     @config
   end
