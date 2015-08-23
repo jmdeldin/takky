@@ -5,7 +5,7 @@ module Takky
     include Sidekiq::Worker
 
     # force uploads to happen on the server they started on
-    unless Rails.env.development?
+    if ENV['RACK_ENV']
       sidekiq_options queue: `hostname`.strip
     end
 

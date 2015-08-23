@@ -12,7 +12,7 @@ module Takky
       fetch_attachment
       upload(uploader_class, resized_upload)
 
-      Rails.logger.info "[staple] resized #{@class_name}##{@id} (#{str_dims}) from #{@source_url}"
+      Takky.logger.info "[staple] resized #{@class_name}##{@id} (#{str_dims}) from #{@source_url}"
     end
 
     private

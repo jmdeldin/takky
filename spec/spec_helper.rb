@@ -1,10 +1,6 @@
 require "takky"
 
-unless defined?(Rails)
-  require "ostruct"
-  require "active_support/string_inquirer"
-  Rails = OpenStruct.new(env: ActiveSupport::StringInquirer.new("test"))
-end
+ENV['RACK_ENV'] ||= 'test'
 
 module TakkySupport
   class FakeAttachment
@@ -16,7 +12,6 @@ module TakkySupport
   end
 
   OtherProcessor = Class.new(FakeProcessor)
-
 
   # TODO: This needs to go in Takky's spec_helper file
   def default_takky_config(example)
@@ -64,16 +59,5 @@ module DatabaseSupport
 
   class ::TakkyModelAttachment < ActiveRecord::Base
     include Takky::Model
-  end
-
-  def fetch_next_attachment_id
-    db = Rails.configuration.database_configuration.fetch("test").fetch("database")
-    next_id_sql = <<-EOF
-      SELECT `AUTO_INCREMENT`
-      FROM information_schema.tables
-      WHERE table_schema = '#{db}' AND table_name = '#{TABLE_NAME}'
-    EOF
-
-    ActiveRecord::Base.connection.select_value(next_id_sql)
   end
 end

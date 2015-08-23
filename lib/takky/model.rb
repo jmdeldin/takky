@@ -64,7 +64,7 @@ module Takky
     end
 
     def set_environment
-      self.environment = Rails.env[0]
+      self.environment = ENV.fetch('RACK_ENV', 'development')[0]
     end
   end
 end

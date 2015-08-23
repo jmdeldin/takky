@@ -40,7 +40,7 @@ describe Takky::UploadWorker do
       attachment.reload
 
       # second upload
-      slide = Rails.root.join("spec/fixtures/images/hero_slide.jpg").to_s
+      slide = "spec/fixtures/images/hero_slide.jpg"
       new_s3_path = "img/t/#{attachment.id}/#{subject.digest(slide)}.jpg"
       expect(subject).to receive(:upload).with(slide, new_s3_path)
       expect(Takky::DeleteWorker).to receive(:perform_in).with(5.minutes, s3_path)

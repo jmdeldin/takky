@@ -17,6 +17,10 @@ module Takky
     yield(@config)
   end
 
+  def self.logger
+    @logger ||= defined?(Rails) ? Rails.logger : Logger.new(STDOUT)
+  end
+
   autoload :Compression, "takky/compression"
   autoload :CompressionWorker, "takky/compression_worker"
 

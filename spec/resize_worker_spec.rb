@@ -43,7 +43,7 @@ describe Takky::ResizeWorker do
                   body: rack_upload(image_fixture("triangle.jpg"), "image/jpeg").read)
 
       log = "[staple] resized Attachment##{attachment.id} (50x50) from http:#{url}"
-      expect(Rails.logger).to receive(:info).with(log)
+      expect(Takky.logger).to receive(:info).with(log)
 
       uploader = instance_double("Takky::Uploader::FileUploader", run: "jid")
       klass = class_double("Takky::Uploader::FileUploader", new: uploader)

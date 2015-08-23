@@ -1,22 +1,24 @@
 require "spec_helper"
 
 describe Takky::CompressionWorker do
+  include DatabaseSupport
+
   describe "#perform" do
     let(:quality) { 85 }
 
     it "raises an error when given an unrecognized extension" do
-      attachment = instance_double("Attachment", id: 1, extension: "tiff")
-      expect(Attachment).to receive(:find).with(1) { attachment }
+      attachment = instance_double("TakkyModelAttachment", id: 1, extension: "tiff")
+      expect(TakkyModelAttachment).to receive(:find).with(1) { attachment }
 
       expect {
-        described_class.new.perform("Attachment", 1, quality)
+        described_class.new.perform("TakkyModelAttachment", 1, quality)
       }.to raise_error(Takky::CompressionWorker::UnknownExtension)
     end
 
     it "resizes" do
-      attachment = instance_double("Attachment", id: 1, extension: "jpg",
+      attachment = instance_double("TakkyModelAttachment", id: 1, extension: "jpg",
                                                  url: "//s3.amazonaws.com/img/t/1/hash.jpg")
-      expect(Attachment).to receive(:find).with(1) { attachment }
+      expect(TakkyModelAttachment).to receive(:find).with(1) { attachment }
 
       uploader = instance_double("Takky::Uploader::FileUploader", run: "jid")
       klass = class_double("Takky::Uploader::FileUploader", new: uploader)
@@ -25,7 +27,7 @@ describe Takky::CompressionWorker do
                                    compress: "sometf")
       expect(Takky::Compression::JpegCompression).to receive(:new) { compresser }
 
-      described_class.new.perform("Attachment", 1, quality, klass)
+      described_class.new.perform("TakkyModelAttachment", 1, quality, klass)
     end
   end
 end

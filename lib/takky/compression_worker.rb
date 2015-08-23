@@ -14,7 +14,7 @@ module Takky
       tf = Tempfile.open(["compressed", "." + record.extension], encoding: "ascii-8bit")
       compress(record, quality, tf)
 
-      Rails.logger.info "[staple] compressing: #{class_name} id=#{image_id}"
+      Takky.logger.info "[staple] compressing: #{class_name} id=#{image_id}"
 
       uploader = uploader_class.new(class_name, image_id, tf)
       uploader.run
