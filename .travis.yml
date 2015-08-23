@@ -5,5 +5,5 @@ before_script:
   - curl -L https://github.com/pornel/pngquant/tarball/master -o /tmp/pngquant.tgz
   - mkdir -p ~/bin /tmp/pngquant
   - tar xvzf /tmp/pngquant.tgz -C /tmp/pngquant --strip-components=1
-  - cd /tmp/pngquant && make && mv pngquant ~/bin/
-  - export PATH="$HOME/bin:$PATH"
+  - (cd /tmp/pngquant && make && mv pngquant ~/bin/)
+script: PATH="$HOME/bin:$PATH" bundle exec rake
