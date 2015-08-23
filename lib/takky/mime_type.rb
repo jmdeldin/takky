@@ -5,6 +5,7 @@ module Takky
     def self.for(filename)
       mime_type = MIME::Types.of(filename).first
       mime_type && map_common(mime_type.extensions.first)
+      # TODO: consider bumping mime_types version requirement
     end
 
     private

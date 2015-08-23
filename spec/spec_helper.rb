@@ -43,7 +43,7 @@ module TakkySupport
   end
 
   def image_fixture(filename)
-    Pathname(__dir__).root.join("spec/fixtures/images", filename).to_s
+    Pathname(__dir__).join("spec/fixtures/images", filename).to_s
   end
 
   def identical_files?(a, b)
