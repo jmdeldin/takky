@@ -3,25 +3,39 @@ module Takky
     attr_reader :bucket
 
     def initialize(bucket: Takky.config.bucket)
-      s3 = AWS::S3.new
-      @bucket = s3.buckets[bucket]
+      @s3 = Aws::S3::Client.new
+      @bucket = bucket
     end
 
     # @param [Pathname|String] src  local filename
     # @param [String]          dest target location on S3
     # @param [Symbol]          acl
-    # @param [Hash]            write_opts See S3Object#write for possible arguments
-    def upload(src, dest, acl: :public_read, write_opts: {})
-      obj = bucket.objects[dest]
-      opts = {acl: acl, content_type: content_type(src)}.merge(write_opts)
-      obj.write(Pathname(src), opts)
+    # @param [Hash]            write_opts See Aws::S3::Client#put_object for possible arguments
+    def upload(src, dest, acl: 'public-read', write_opts: {})
+      File.open(src, 'rb') do |fh|
+        opts = {acl: acl,
+                body: fh,
+                bucket: @bucket,
+                content_type: content_type(src),
+                key: dest,
+               }.merge(write_opts)
+
+        # TODO: Note the 5 GB limit S3 has...somewhere
+        @s3.put_object(opts)
+      end
     end
 
     def delete(path, directory: false)
       if directory
-        bucket.objects.with_prefix(path).delete_all
+        objs = @s3.list_objects(bucket: @bucket, prefix: path).
+               contents.
+               map(&:key).
+               sort { |a,b| a.ends_with?('/') ? 1 : 0 }. # delete the directory last
+               each_with_object({objects: []}) { |k, h| h[:objects] << {key: k} }
+        @s3.delete_objects(bucket: @bucket,
+                           delete: objs)
       else
-        bucket.objects[path].delete
+        @s3.delete_object(bucket: @bucket, key: path)
       end
     end
 
