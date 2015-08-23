@@ -3,7 +3,7 @@ require "spec_helper"
 describe Takky::ResizeWorker do
   include TakkySupport
 
-  let(:klass) { "Attachment" }
+  let(:klass) { "TakkyModelAttachment" }
   let(:url) { "//example.com/test.jpg" }
   let(:opts) { {"quality" => 85, "style" => "child", "dims" => [50, 50]} }
 
@@ -34,21 +34,21 @@ describe Takky::ResizeWorker do
 
   describe "#perform", integration: true do
     let(:attachment) {
-      Attachment.create!(extension: "jpg", style: "parent")
+      TakkyModelAttachment.create!(extension: "jpg", style: "parent")
     }
 
     it "works" do
       stub_request(:get, url).
         to_return(status: 200,
-                  body: rack_upload(image_fixture("triangle.jpg"), "image/jpeg").read)
+                  body: Rack::Test::UploadedFile.new(image_fixture("triangle.jpg"), "image/jpeg").read)
 
-      log = "[staple] resized Attachment##{attachment.id} (50x50) from http:#{url}"
+      log = "[staple] resized TakkyModelAttachment##{attachment.id} (50x50) from http:#{url}"
       expect(Takky.logger).to receive(:info).with(log)
 
       uploader = instance_double("Takky::Uploader::FileUploader", run: "jid")
       klass = class_double("Takky::Uploader::FileUploader", new: uploader)
 
-      described_class.new.perform("Attachment", attachment.id, url, opts, klass)
+      described_class.new.perform("TakkyModelAttachment", attachment.id, url, opts, klass)
     end
   end
 end

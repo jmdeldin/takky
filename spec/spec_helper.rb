@@ -1,4 +1,6 @@
 require "takky"
+require "webmock/rspec"
+require "rack/test"
 
 ENV['RACK_ENV'] ||= 'test'
 
@@ -28,7 +30,7 @@ module TakkySupport
   end
 
   def image_fixture(filename)
-    Pathname(__dir__).join("spec/fixtures/images", filename).to_s
+    Pathname(__dir__).join("fixtures/images", filename).to_s
   end
 
   def identical_files?(a, b)
